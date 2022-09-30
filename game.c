@@ -43,6 +43,14 @@ const unsigned char sprPlayer[]={
   128
 };
 
+const unsigned char sprGhost[]={
+  0,-1,0x49,0,
+  8,-1,0x4a,0,
+  0, 7,0x4b,0,
+  8, 7,0x4c,0,
+  128
+};
+
 /*{pal:"nes",layout:"nes"}*/
 const char PALETTE[32] = { 
   0x03,			// screen color
@@ -70,9 +78,15 @@ void setup_graphics() {
 byte actor_x = 128;
 byte actor_y = 64;
 
+byte ghost_x = 128;
+byte ghost_y = 168;
+
 // Player x/y velocity
 sbyte actor_dx = 0;
 sbyte actor_dy = 0;
+
+sbyte ghost_dx = 0;
+sbyte ghost_dy = 0;
 
 // Function for moving player
 void move_player() {
@@ -95,14 +109,23 @@ void move_player() {
  
   // draw player
   oam_meta_spr(actor_x, actor_y, 0, sprPlayer);
+  oam_meta_spr(ghost_x, ghost_y, 16, sprGhost);
+  
   actor_x += actor_dx;
   actor_y += actor_dy;
+  
+  ghost_dx = (actor_x - ghost_x);
+  ghost_dy = (actor_y - ghost_y);
+
+  ghost_x += ghost_dx/20;
+  ghost_y += ghost_dy/20;
 }
 
 // Draw sprites
 void draw_sprites() {
   oam_clear();
   oam_meta_spr(128, 64, 0, sprPlayer);
+  oam_meta_spr(128, 168, 16, sprGhost);
 }
 
 
